@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="da">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>HR i DanPilot – klikbar skitse</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --ground: #F5F6F8; --card: #FFFFFF; --ink: #1C2330; --muted: #4F5867; --line: #DDE2E8; --line2: #C5CCD5;
+  --accent: #C2410C; --accent-ink: #FFFFFF; --soft: #FCE7DC; --soft-ink: #8A2E08; --blue: #1F5FA8;
+  --bar: #1C2330; --bar-ink: #FFFFFF; --done: #1F7A50; --done-bg: #E3F3EA;
+  color-scheme: light; box-sizing: border-box;
+  padding-top: env(safe-area-inset-top, 0px); padding-bottom: env(safe-area-inset-bottom, 0px);
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --ground: #11161F; --card: #1A2230; --ink: #E8ECF2; --muted: #A6B0BE; --line: #2B3647; --line2: #3A4659;
+    --accent: #F08A55; --accent-ink: #1A1006; --soft: #3A2316; --soft-ink: #F6B894; --blue: #7FAAE8;
+    --bar: #0B0F16; --bar-ink: #E8ECF2; --done: #62C996; --done-bg: #14301F; color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --ground: #11161F; --card: #1A2230; --ink: #E8ECF2; --muted: #A6B0BE; --line: #2B3647; --line2: #3A4659;
+  --accent: #F08A55; --accent-ink: #1A1006; --soft: #3A2316; --soft-ink: #F6B894; --blue: #7FAAE8;
+  --bar: #0B0F16; --bar-ink: #E8ECF2; --done: #62C996; --done-bg: #14301F; color-scheme: dark;
+}
+*, *::before, *::after { box-sizing: inherit; }
+html { scroll-padding-top: env(safe-area-inset-top, 0px); }
+body { margin: 0; background: var(--ground); color: var(--ink); font-family: Figtree, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; font-size: 16px; line-height: 1.5; }
+button { font: inherit; }
+.note { background: var(--soft); color: var(--soft-ink); font-size: 14px; text-align: center; padding: 8px 16px; }
+.bar { background: var(--bar); color: var(--bar-ink); }
+.bar-in { max-width: 1180px; margin: 0 auto; padding: 12px 24px; display: flex; flex-wrap: wrap; gap: 10px 26px; align-items: center; }
+.brand { font-weight: 700; font-size: 17px; }
+.nav { display: flex; gap: 18px; flex-wrap: wrap; }
+.nav button { background: none; border: none; color: var(--bar-ink); padding: 4px 0; cursor: pointer; border-bottom: 2px solid transparent; }
+.nav button.on { border-bottom-color: var(--accent); }
+.wrap { max-width: 1180px; margin: 0 auto; padding: 32px 24px 56px; }
+h1 { font-size: clamp(32px, 4.5vw, 44px); line-height: 1.05; margin: 0 0 6px; font-weight: 700; letter-spacing: -0.01em; }
+h2 { font-size: 22px; margin: 0 0 12px; }
+.lede { color: var(--muted); font-size: 18px; margin: 0; }
+.top { display: flex; flex-wrap: wrap; gap: 18px 40px; align-items: end; justify-content: space-between; margin-bottom: 26px; }
+.search { display: flex; gap: 8px; flex: 1 1 340px; max-width: 460px; }
+.search input { flex: 1; min-width: 0; height: 46px; padding: 0 14px; border: 1.5px solid var(--line2); border-radius: 10px; font: inherit; background: var(--card); color: var(--ink); }
+.tiles { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 16px; }
+.tile { text-align: left; cursor: pointer; display: flex; flex-direction: column; gap: 6px; padding: 22px; min-height: 118px; background: var(--card); color: var(--ink); border: 1px solid var(--line); border-radius: 14px; transition: border-color .15s, transform .15s; }
+.tile:hover { border-color: var(--accent); transform: translateY(-2px); }
+.tile.hl { background: var(--accent); color: var(--accent-ink); border-color: transparent; }
+.tile b { font-size: 20px; }
+.tile span { font-size: 15px; color: var(--muted); }
+.tile.hl span { color: var(--accent-ink); }
+.row { display: flex; flex-wrap: wrap; gap: 16px; margin-top: 18px; }
+.panel { background: var(--card); border: 1px solid var(--line); border-radius: 14px; padding: 22px; }
+.panel.main { flex: 999 1 560px; min-width: 0; }
+.panel.side { flex: 1 1 280px; background: var(--bar); color: var(--bar-ink); border-color: transparent; }
+.panel.side small { color: inherit; opacity: .8; font-size: 14px; }
+table { width: 100%; border-collapse: collapse; font-size: 15px; }
+th { text-align: left; color: var(--muted); font-weight: 600; border-bottom: 1.5px solid var(--line2); padding: 8px 10px 8px 0; }
+td { border-bottom: 1px solid var(--line); padding: 10px 10px 10px 0; }
+tr:last-child td { border-bottom: none; }
+.scroll { overflow-x: auto; }
+.back { background: none; border: none; color: var(--blue); cursor: pointer; padding: 0; margin-bottom: 14px; font-size: 15px; }
+.controls { display: flex; flex-wrap: wrap; gap: 14px 28px; align-items: center; margin: 18px 0 20px; }
+.seg { display: inline-flex; flex-wrap: wrap; max-width: 100%; border: 1.5px solid var(--line2); border-radius: 10px; overflow: hidden; }
+.seg button { border: none; background: var(--card); color: var(--ink); padding: 8px 14px; cursor: pointer; min-height: 40px; }
+.seg button.on { background: var(--ink); color: var(--ground); }
+.lbl { font-size: 14px; color: var(--muted); margin-right: 8px; font-weight: 600; }
+.progress { flex: 1 1 220px; max-width: 340px; }
+.ptrack { height: 10px; background: var(--line); border-radius: 6px; overflow: hidden; }
+.pfill { height: 100%; background: var(--done); width: 0; transition: width .25s; }
+.ptext { font-size: 14px; color: var(--muted); margin-top: 4px; }
+.phases { display: grid; gap: 12px; }
+.phase { display: grid; grid-template-columns: 190px minmax(0, 1fr); gap: 14px; background: var(--card); border: 1px solid var(--line); border-radius: 12px; padding: 14px 16px; }
+.phase h3 { margin: 4px 0 0; font-size: 16px; }
+.steps { display: grid; gap: 8px; }
+.step { display: flex; gap: 10px; align-items: flex-start; padding: 8px 10px; border-radius: 8px; cursor: pointer; }
+.step:hover { background: var(--ground); }
+.step input { width: 20px; height: 20px; margin: 2px 0 0; accent-color: var(--done); flex: none; }
+.step .t { flex: 1; }
+.step.done .t { color: var(--muted); text-decoration: line-through; }
+.step.dim { opacity: .35; }
+.step.intl .t::after { content: " (station)"; color: var(--blue); font-weight: 600; font-size: 14px; }
+.tag { font-size: 12px; font-weight: 700; padding: 2px 9px; border-radius: 20px; white-space: nowrap; }
+.tag.HR { background: var(--accent); color: var(--accent-ink); }
+.tag.Leder { background: var(--ink); color: var(--ground); }
+.tag.IT { border: 1.5px solid var(--blue); color: var(--blue); }
+.tag.Buddy { background: var(--soft); color: var(--soft-ink); }
+.tag.Medarbejder { background: var(--line); color: var(--ink); }
+.tmpl { display: grid; gap: 14px; }
+.tmpl div { border-left: 4px solid var(--line2); padding-left: 14px; }
+.tmpl h3 { margin: 0 0 2px; font-size: 15px; color: var(--muted); }
+.tmpl p { margin: 0; }
+.empty { color: var(--muted); }
+footer { max-width: 1180px; margin: 0 auto; padding: 0 24px 40px; color: var(--muted); font-size: 14px; }
+:focus-visible { outline: 3px solid var(--blue); outline-offset: 2px; }
+@media (max-width: 640px) {
+  .phase { grid-template-columns: 1fr; gap: 6px; }
+  .wrap { padding: 24px 16px 40px; }
+}
+@media (prefers-reduced-motion: reduce) { .tile, .pfill { transition: none; } }
+</style>
+</head>
+<body>
+<div class="note">Klikbar skitse til DanPilot. Ikke et rigtigt system, og indholdet er et forslag.</div>
+<div class="bar"><div class="bar-in">
+  <span class="brand">Intranet</span>
+  <nav class="nav" aria-label="Hovedmenu">
+    <button type="button" data-go="home" class="on">HR</button>
+    <button type="button" data-go="ny">Ny i DanPilot</button>
+    <button type="button" data-go="stop">Når du stopper</button>
+  </nav>
+</div></div>
+<main class="wrap" id="app"></main>
+<footer>Lavet af Omar Slaiman til Jannie Markussen, DanPilot, oktober 2026.</footer>
+
+<script>
+const ROLES = ['HR', 'Leder', 'IT', 'Buddy', 'Medarbejder'];
+const PLANS = {
+  ny: {
+    title: 'Ny i DanPilot', lede: 'Din plan for de første tre måneder, uanset om du starter på hovedkontoret eller på en station. Onboardingen kører side om side med dine egne opgaver, sammen med din buddy.',
+    phases: [
+      ['Før start: Klar før første dag', [['Velkomstmail, så du ved, hvad der venter', 'HR'], ['Udstyr og adgange klar', 'IT'], ['Buddy udpeget', 'Leder'], ['Vagtplan og kontaktpersoner på stationen sendt', 'Leder', 1], ['Overenskomst og vilkår forklaret på én side', 'HR', 1]]],
+      ['Dag 1: Mød lederen og din buddy', [['Velkomst og rundvisning', 'Leder'], ['Frokost med buddy', 'Buddy'], ['Personalehåndbog og politikker samlet ét sted', 'HR'], ['Personligt udstyr udleveret på stationen', 'Leder', 1], ['Online velkomst med HR fra hovedkontoret', 'HR', 1]]],
+      ['Uge 1: Forstå kerneopgaven', [['En dag med en kollega i en anden funktion, fx en lods, en bådfører eller en kollega på kontoret', 'Leder'], ['Introduktion til, hvordan en lodsning foregår', 'Buddy'], ['Mød kollegerne på stationen og forstå vagtrytmen', 'Buddy', 1]]],
+      ['Måned 1: Følg en opgave på tværs', [['Følg en lodsning fra bestilling til afslutning', 'Buddy'], ['Hver funktion fortæller sin del', 'Leder'], ['Mød en kollega på hovedkontoret online', 'Medarbejder', 1]]],
+      ['Måned 1–3: Friske øjne', [['Del tre ting, der undrede dig', 'Medarbejder'], ['Én idé testes inden for tre måneder', 'Leder'], ['Idéerne samles, så alle kan lære af dem', 'HR']]],
+      ['Måned 3: Opfølgning', [['Samtale før prøvetiden udløber', 'Leder'], ['Onboardingplanen justeres ud fra svarene', 'HR']]]
+    ]
+  },
+  stop: {
+    title: 'Når du stopper', lede: 'Sådan foregår en fratrædelse, så intet bliver glemt og viden bliver i huset.',
+    phases: [
+      ['Opsigelse', [['Bekræftelse og fratrædelsesdato', 'HR'], ['Plan for overdragelse', 'Leder']]],
+      ['Overdragelse', [['Viden og opgaver skrives ned', 'Medarbejder'], ['Kolleger og kunder informeres', 'Leder'], ['Udstyr og nøgler afleveret på stationen', 'Leder', 1]]],
+      ['Sidste uge', [['Exitsamtale: hvad kan vi lære?', 'HR']]],
+      ['Sidste dag', [['Udstyr afleveret', 'Medarbejder'], ['Adgange lukket', 'IT'], ['En ordentlig tak', 'Leder']]],
+      ['Efter', [['Afslutning i løn og systemer', 'HR'], ['Læring fra exitsamtaler samles hvert halve år', 'HR']]]
+    ]
+  }
+};
+const TILES = [
+  ['ny', 'Ny i DanPilot', 'Din plan for de første tre måneder, og hvem du spørger om hvad.', 1],
+  ['stop', 'Når du stopper', 'Sådan foregår din fratrædelse, trin for trin.'],
+  ['haandbog', 'Personalehåndbog', 'Regler og det praktiske i hverdagen, skrevet så de er til at forstå.'],
+  ['politikker', 'Politikker', 'Fx rejser, IT og trivsel.'],
+  ['blanketter', 'Blanketter', 'Alle skemaer samlet, i den nyeste version.'],
+  ['fravaer', 'Ferie og fravær', 'Sådan melder du ferie, sygdom og barns sygdom.']
+];
+const DOCS = [
+  ['Personalehåndbog', 'HR', 'haandbog'], ['Onboardingplan, hovedkontor', 'HR', 'ny'], ['Onboardingplan, stationer', 'HR', 'ny'],
+  ['Fratrædelse, tjekliste', 'HR', 'stop'], ['Overenskomster, overblik', 'Jura', 'politikker'], ['IT-politik', 'HR', 'politikker'],
+  ['Trivselspolitik', 'HR', 'politikker'], ['Blanket: ændring af stamdata', 'HR', 'blanketter'], ['Blanket: udlæg', 'HR', 'blanketter'],
+  ['Sådan melder du dig syg', 'HR', 'fravaer'], ['Sådan søger du ferie', 'HR', 'fravaer']
+];
+const PAGES = {
+  haandbog: 'Personalehåndbog', politikker: 'Politikker', blanketter: 'Blanketter', fravaer: 'Ferie og fravær'
+};
+let view = 'home', where = 'dk', who = 'Alle', q = '';
+const done = {};
+const app = document.getElementById('app');
+const esc = s => String(s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+
+function go(v) {
+  view = v;
+  if (location.hash.slice(1) !== v) history.replaceState(null, '', v === 'home' ? location.pathname : '#' + v);
+  document.querySelectorAll('.nav button').forEach(b => b.classList.toggle('on', b.dataset.go === v || (v !== 'ny' && v !== 'stop' && b.dataset.go === 'home')));
+  render(); window.scrollTo(0, 0);
+}
+document.querySelectorAll('.nav button').forEach(b => b.addEventListener('click', () => go(b.dataset.go)));
+
+function home() {
+  const ql = q.trim().toLowerCase();
+  const tiles = TILES.filter(t => !ql || (t[1] + ' ' + t[2]).toLowerCase().includes(ql));
+  const docs = DOCS.filter(d => !ql || d[0].toLowerCase().includes(ql));
+  app.innerHTML = `
+    <div class="top"><div><h1>HR</h1><p class="lede">Alt om din ansættelse, samlet ét sted.</p></div>
+      <div class="search" role="search"><label for="s" class="lbl" style="position:absolute;width:1px;height:1px;overflow:hidden">Søg i HR</label>
+      <input id="s" type="search" placeholder="Søg fx ferie, sygdom eller blanket" value="${esc(q)}"></div></div>
+    <div class="tiles">${tiles.map(t => `<button type="button" class="tile${t[3] ? ' hl' : ''}" data-v="${t[0]}"><b>${t[1]}</b><span>${t[2]}</span></button>`).join('') || '<p class="empty">Ingen indgange matcher. Prøv et andet ord.</p>'}</div>
+    <div class="row">
+      <section class="panel main"><h2>Senest gennemgået</h2><div class="scroll"><table>
+        <thead><tr><th>Dokument</th><th>Ejer</th><th>Gennemgået</th></tr></thead>
+        <tbody>${docs.map(d => `<tr><td><button type="button" class="back" style="margin:0" data-v="${d[2]}">${d[0]}</button></td><td>${d[1]}</td><td>[dato]</td></tr>`).join('') || '<tr><td colspan="3" class="empty">Ingen dokumenter matcher.</td></tr>'}</tbody>
+      </table></div></section>
+      <section class="panel side"><h2>Kontakt HR</h2>
+        <p style="margin:0 0 12px"><b>HR-generalister</b><br><small>[navn], [mail]</small></p>
+        <p style="margin:0 0 12px"><b>Jura og overenskomster</b><br><small>[navn], [mail]</small></p>
+        <p style="margin:0"><small>Vi dækker for hinanden ved fravær.</small></p></section>
+    </div>`;
+  const s = document.getElementById('s');
+  s.addEventListener('input', e => { q = e.target.value; const pos = e.target.selectionStart; home(); const n = document.getElementById('s'); n.focus(); n.setSelectionRange(pos, pos); });
+  app.querySelectorAll('[data-v]').forEach(b => b.addEventListener('click', () => go(b.dataset.v)));
+}
+
+function plan(key) {
+  const p = PLANS[key];
+  const all = [];
+  p.phases.forEach(([ph, steps], i) => steps.forEach(([t, r, intl], j) => { if (!intl || where === 'int') all.push(key + i + '-' + j); }));
+  const relevant = all.filter(id => { const [i, j] = id.slice(key.length).split('-').map(Number); const r = p.phases[i][1][j][1]; return who === 'Alle' || r === who; });
+  const n = relevant.filter(id => done[id]).length;
+  app.innerHTML = `
+    <button type="button" class="back" data-v="home">Tilbage til HR</button>
+    <h1>${p.title}</h1><p class="lede">${p.lede}</p>
+    <div class="controls">
+      <div><span class="lbl">Arbejdssted</span><span class="seg" role="group" aria-label="Arbejdssted">
+        <button type="button" data-w="dk" class="${where === 'dk' ? 'on' : ''}" aria-pressed="${where === 'dk'}">Hovedkontor</button>
+        <button type="button" data-w="int" class="${where === 'int' ? 'on' : ''}" aria-pressed="${where === 'int'}">Station</button></span></div>
+      <div><span class="lbl">Vis som</span><span class="seg" role="group" aria-label="Vis som">
+        ${['Alle', ...ROLES].map(r => `<button type="button" data-r="${r}" class="${who === r ? 'on' : ''}" aria-pressed="${who === r}">${r}</button>`).join('')}</span></div>
+      <div class="progress" aria-live="polite"><div class="ptrack"><div class="pfill" style="width:${relevant.length ? (n / relevant.length * 100) : 0}%"></div></div>
+        <div class="ptext">${n} af ${relevant.length} trin klaret${who !== 'Alle' ? ' for ' + who : ''}</div></div>
+    </div>
+    <div class="phases">${p.phases.map(([ph, steps], i) => `
+      <section class="phase"><h3>${ph}</h3><div class="steps">${steps.map(([t, r, intl], j) => {
+        if (intl && where !== 'int') return '';
+        const id = key + i + '-' + j, dim = who !== 'Alle' && r !== who;
+        return `<label class="step${done[id] ? ' done' : ''}${dim ? ' dim' : ''}${intl ? ' intl' : ''}"><input type="checkbox" data-id="${id}" ${done[id] ? 'checked' : ''}><span class="t">${t}</span><span class="tag ${r}">${r}</span></label>`;
+      }).join('')}</div></section>`).join('')}
+    </div>`;
+  app.querySelectorAll('[data-v]').forEach(b => b.addEventListener('click', () => go(b.dataset.v)));
+  app.querySelectorAll('[data-w]').forEach(b => b.addEventListener('click', () => { where = b.dataset.w; plan(key); }));
+  app.querySelectorAll('[data-r]').forEach(b => b.addEventListener('click', () => { who = b.dataset.r; plan(key); }));
+  app.querySelectorAll('[data-id]').forEach(c => c.addEventListener('change', () => { done[c.dataset.id] = c.checked; plan(key); }));
+}
+
+function page(key) {
+  const docs = DOCS.filter(d => d[2] === key);
+  let body = '';
+  if (key === 'haandbog') {
+    body = `<section class="panel"><h2>Sådan er hvert afsnit bygget op</h2>
+      <p class="empty" style="margin:0 0 16px">Samme skabelon i hele håndbogen, så man altid ved, hvor svaret står. Eksemplet er en skitse, ikke jeres regler.</p>
+      <div class="tmpl">
+        <div><h3>Afsnit</h3><p><b>Når du er syg</b></p></div>
+        <div><h3>Formål</h3><p>Så din leder og dine kolleger kan planlægge, og du kan fokusere på at blive rask.</p></div>
+        <div><h3>Hvem gælder det for</h3><p>Alle medarbejdere. Lodser og bådførere følger desuden [deres overenskomst].</p></div>
+        <div><h3>Sådan gør du</h3><p>Ring til din nærmeste leder inden [tidspunkt] på din første sygedag, og giv besked, når du er tilbage.</p></div>
+        <div><h3>Kontakt</h3><p>Din nærmeste leder eller HR.</p></div>
+        <div><h3>Ejer og senest gennemgået</h3><p>HR, [dato]</p></div>
+      </div></section>`;
+  }
+  app.innerHTML = `
+    <button type="button" class="back" data-v="home">Tilbage til HR</button>
+    <h1>${PAGES[key]}</h1><p class="lede" style="margin-bottom:22px">Hvert dokument har en ejer og en dato for, hvornår det sidst er gennemgået.</p>
+    ${body}
+    <section class="panel" style="margin-top:16px"><h2>Dokumenter</h2><div class="scroll"><table>
+      <thead><tr><th>Dokument</th><th>Ejer</th><th>Gennemgået</th></tr></thead>
+      <tbody>${docs.map(d => `<tr><td>${d[0]}</td><td>${d[1]}</td><td>[dato]</td></tr>`).join('')}</tbody></table></div></section>`;
+  app.querySelectorAll('[data-v]').forEach(b => b.addEventListener('click', () => go(b.dataset.v)));
+}
+
+function render() {
+  if (view === 'ny' || view === 'stop') plan(view);
+  else if (PAGES[view]) page(view);
+  else home();
+}
+const start = location.hash.slice(1);
+go(PLANS[start] || PAGES[start] ? start : 'home');
+</script>
+</body>
+</html>
